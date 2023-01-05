@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -12,10 +14,12 @@ class Quiz extends StatefulWidget {
 }
 
 class _QuizState extends State<Quiz> {
-  int _currentQuestionIndex = 0;
+  List _numberQuestions = _randomNumberList();
   int _score = 0;
+  int i = 0;
 
-  final List<Map<String, Object>> _questions = [
+  // ignore: prefer_final_fields
+  static List<Map<String, Object>> _questions = [
     {
       'questionText': 'O que a palavra legend significa em português?',
       'answers': [
@@ -67,6 +71,98 @@ class _QuizState extends State<Quiz> {
         {'text': 'Acerola', 'score': 0},
       ],
     },
+    {
+      'questionText': 'Em que lugar vivem mais cangurus do que pessoas?',
+      'answers': [
+        {'text': 'Austrália', 'score': 1},
+        {'text': 'Indonésia', 'score': 0},
+        {'text': 'Nova Zelândia', 'score': 0},
+        {'text': 'Papua-Nova Guiné', 'score': 0},
+        {'text': 'África do Sul', 'score': 0},
+      ],
+    },
+    {
+      'questionText': 'Quantos braços tem um polvo?',
+      'answers': [
+        {'text': 'Seis', 'score': 0},
+        {'text': 'Dez', 'score': 0},
+        {'text': 'Sete', 'score': 0},
+        {'text': 'Três', 'score': 0},
+        {'text': 'Oito', 'score': 1},
+      ],
+    },
+    {
+      'questionText': 'Nesses pares, ambos são mamíferos:',
+      'answers': [
+        {'text': 'Baleia azul e golfinhos', 'score': 1},
+        {'text': 'Morcegos e galinhas', 'score': 0},
+        {'text': 'Girafas e tartarugas', 'score': 0},
+        {'text': 'Porcos e pinguins', 'score': 0},
+        {'text': 'Macacos e sapos', 'score': 0},
+      ],
+    },
+    {
+      'questionText': 'De que são constituídos os diamantes?',
+      'answers': [
+        {'text': 'Carbono', 'score': 1},
+        {'text': 'Grafite', 'score': 0},
+        {'text': 'Rênio', 'score': 0},
+        {'text': 'Ósmio', 'score': 0},
+        {'text': 'Bóhrio', 'score': 0},
+      ],
+    },
+    {
+      'questionText':
+          'Qual desses autores brasileiros escreveu O Guarani e O Gaúcho?',
+      'answers': [
+        {'text': 'Aluísio de Azevedo', 'score': 0},
+        {'text': 'José de Anchieta', 'score': 0},
+        {'text': 'José de Alencar', 'score': 1},
+        {'text': 'Gonçalves Dias', 'score': 0},
+        {'text': 'Gonçalves de Magalhães', 'score': 0},
+      ],
+    },
+    {
+      'questionText': 'O etanol é produzido através de qual fonte de energia?',
+      'answers': [
+        {'text': 'Solar', 'score': 0},
+        {'text': 'Biomassa', 'score': 1},
+        {'text': 'Eólica', 'score': 0},
+        {'text': 'Geotérmica', 'score': 0},
+        {'text': 'Hidrelétrica', 'score': 0},
+      ],
+    },
+    {
+      'questionText':
+          'Qual destas, apesar do seu nome, não é considerada um tipo de força?',
+      'answers': [
+        {'text': 'Força de atrito', 'score': 0},
+        {'text': 'Força peso', 'score': 0},
+        {'text': 'Força centrípeta', 'score': 0},
+        {'text': 'Força eletromotriz', 'score': 1},
+        {'text': 'Força normal', 'score': 0},
+      ],
+    },
+    {
+      'questionText': 'Qual desses não é um instrumento meteorológico?',
+      'answers': [
+        {'text': 'Barógrafo', 'score': 0},
+        {'text': 'Termômetro', 'score': 0},
+        {'text': 'Pluviômetro', 'score': 0},
+        {'text': 'Anemômetro', 'score': 0},
+        {'text': 'Etilômetro', 'score': 1},
+      ],
+    },
+    {
+      'questionText': 'Qual desses não é um instrumento meteorológico?',
+      'answers': [
+        {'text': 'Michelangelo', 'score': 0},
+        {'text': 'Donatello', 'score': 0},
+        {'text': 'William Shakespeare', 'score': 0},
+        {'text': 'Leonardo da Vinc', 'score': 1},
+        {'text': 'Van Gogh', 'score': 0},
+      ],
+    },
     // more questions...
   ];
 
@@ -74,15 +170,29 @@ class _QuizState extends State<Quiz> {
     _score += score;
 
     setState(() {
-      _currentQuestionIndex = _currentQuestionIndex + 1;
+      i++;
     });
+  }
+
+  static List<int> _randomNumberList() {
+    List<int> numberList = [];
+    Random randomizer = new Random();
+    while (numberList.length < 6) {
+      int random_number = randomizer.nextInt(_questions.length);
+      if (!numberList.contains(random_number)) {
+        numberList.add(random_number);
+      }
+    }
+    return numberList;
   }
 
   void _resetQuiz() {
     setState(() {
-      _currentQuestionIndex = 0;
+      _numberQuestions = _randomNumberList();
       _score = 0;
-      HomePage();
+      i = 0;
+      _numberQuestions.elementAt(i);
+      print(_score);
     });
   }
 
@@ -95,17 +205,17 @@ class _QuizState extends State<Quiz> {
           backgroundColor: Color.fromRGBO(0, 173, 181, 1),
           title: Center(child: Text('Quiz Game by Leonardo Massena')),
         ),
-        body: _currentQuestionIndex < _questions.length
+        body: i < 5
             ? Padding(
                 padding: const EdgeInsets.all(30.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     Question(
-                      _questions[_currentQuestionIndex]['questionText']
+                      _questions[_numberQuestions.elementAt(i)]['questionText']
                           .toString(),
                     ),
-                    ...(_questions[_currentQuestionIndex]['answers']
+                    ...(_questions[_numberQuestions.elementAt(i)]['answers']
                             as List<Map<String, Object>>)
                         .map((answer) {
                       return Answer(
@@ -117,7 +227,7 @@ class _QuizState extends State<Quiz> {
                   ],
                 ),
               )
-            : Result(_score, _resetQuiz),
+            : Result(_score, () => _resetQuiz),
       ),
     );
   }
@@ -203,14 +313,14 @@ class Result extends StatelessWidget {
               'Voltar para o início',
               style: TextStyle(fontSize: 25),
             ),
-            onPressed: () {
-              resetHandler;
+            onPressed: () => {
+              resetHandler,
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => HomePage(),
                 ),
-              );
+              )
             },
           )
         ],
